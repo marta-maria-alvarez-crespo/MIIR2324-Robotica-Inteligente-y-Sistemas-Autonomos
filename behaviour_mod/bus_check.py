@@ -34,7 +34,7 @@ class BusCheck(Behaviour):
         self.robot.wait(5)
             
         self.robot.moveTiltTo(90,15,False)
-        self.robot.movePanTo(0,15, True)  
+        self.robot.movePanTo(0,15, True)
         self.passenger = False
         self.allow_bus_stop = False
               

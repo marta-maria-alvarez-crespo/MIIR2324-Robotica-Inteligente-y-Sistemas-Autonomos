@@ -3,13 +3,8 @@ from behaviour_mod.behaviour import Behaviour
 class GoAhead(Behaviour):
     def __init__(self, robot, supress_list, params):
         super().__init__(robot, supress_list, params)
-        self.change_speed = False
         self.speed = 20
-        self.min_distance = 20
-        
         self.robot.moveTiltTo(90,15)
-        self.robot.whenANewQRCodeIsDetected(self.new_QR_detected)
-        self.robot.whenAQRCodeIsDetected(self.QR_detected)
         
         self.__SP = self.robot.readOrientationSensor().yaw
         self.K = 0.5
@@ -35,36 +30,10 @@ class GoAhead(Behaviour):
         if not self.supress:
             return True
         
-    def new_QR_detected(self):
-        try:
-            qr_id = self.robot.readQR().id
-            _, _, qr_speed = qr_id.rpartition(' ')
-            speed = int(qr_speed)
-            self.change_speed = True
-        except:
-            pass
-           
-    def QR_detected(self):
-        print('caca')
-        '''callback del whenAQRCodeIsDetected()'''
-        if self.change_speed:
-            qr_id = self.robot.readQR().id
-            qr_distance = self.robot.readQR().distance
-            self.robot.sayText(qr_distance)
-            try:
-                _, _, qr_speed = qr_id.rpartition(' ')
-                speed = int(qr_speed)
-                if qr_distance >= self.min_distance and (speed >= 0 or speed <=100):
-                    self.speed = speed
-                    self.change_speed = False
-                else:
-                    print("Velocidad fuera de rango")
-            except:
-                print("El QR no indica velocidad")
-        
     def action(self):
         ''' action() se llama desde behaviour a través de run()'''
         print("----> control: GoAhead")
+        print(self.speed)
         self.supress = False
         if not self.supress:
             self.robot.moveWheels(self.speed, int(self.PID()))
@@ -78,14 +47,24 @@ class GoAhead(Behaviour):
     def SP(self, state):
         if self.supress:    
             self.__SP = state - 90
+            if self.__SP < -180:
+                self.__SP = self.__SP + 360
+            print("esto es el __SP actual ",self.__SP)
         
     def PID(self):
         ''' codigo con un pid discretizado. el error se pone en negativo porque se empieza en 20'''
-        self.error[self.CUR] = -(self.__SP - self.robot.readOrientationSensor().yaw)
-        # print(self.error[self.CUR])
+        current_orientation = self.robot.readOrientationSensor().yaw
+        
+        if current_orientation/self.__SP > 0:
+            self.error[self.CUR] = -(self.__SP - self.robot.readOrientationSensor().yaw)
+        else:
+            self.error[self.CUR] = -(self.__SP + self.robot.readOrientationSensor().yaw)
+            
         self.integral[self.CUR] = self.C1 * (self.error[self.CUR] + self.error[self.PRE]) + self.integral[self.PRE]
         self.derivative[self.CUR] = self.C2 * (self.error[self.CUR] - self.error[self.PRE]) + self.C3 * self.derivative[self.PRE]
-                
+        print("esto es el error actual ",self.error[self.CUR])
+        print("esto es la integral ",self.integral[self.CUR])
+        print("esto es la derivada ",self.derivative[self.CUR])
         self.error[self.PRE] = self.error[self.CUR]
         self.integral[self.PRE] = self.integral[self.CUR]
         self.derivative[self.PRE] = self.derivative[self.CUR]
