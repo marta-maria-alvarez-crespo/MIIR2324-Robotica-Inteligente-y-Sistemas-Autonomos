@@ -5,18 +5,14 @@ class SayStop(Behaviour):
     def __init__(self, robot, supress_list, params):
         super().__init__(robot, supress_list, params)
         self.heard_stop = False
-        self.required.stop = False
+        self.required_stop = False
         self.message = 'para'
         self.robot.startSpeechDetection()
-        self.hearing()
-
-    def hearing(self):
-        while True:
-            if self.robot.readDetectedSpeech().message == self.message:
-                self.heard_stop = True
-                
+                 
     def take_control(self):
         if not self.supress:
+            if self.robot.readDetectedSpeech().message == self.message:
+                self.heard_stop = True
             return self.required_stop
         
     def action(self):

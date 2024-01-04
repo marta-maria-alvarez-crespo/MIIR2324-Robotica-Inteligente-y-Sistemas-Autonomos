@@ -33,7 +33,7 @@ class GoAhead(Behaviour):
     def action(self):
         ''' action() se llama desde behaviour a través de run()'''
         print("----> control: GoAhead")
-        print(self.speed)
+        # print(self.speed)
         self.supress = False
         if not self.supress:
             self.robot.moveWheels(self.speed, int(self.PID()))
@@ -49,7 +49,7 @@ class GoAhead(Behaviour):
             self.__SP = state - 90
             if self.__SP < -180:
                 self.__SP = self.__SP + 360
-            print("esto es el __SP actual ",self.__SP)
+            # print("esto es el __SP actual ",self.__SP)
         
     def PID(self):
         ''' codigo con un pid discretizado. el error se pone en negativo porque se empieza en 20'''
@@ -62,9 +62,9 @@ class GoAhead(Behaviour):
             
         self.integral[self.CUR] = self.C1 * (self.error[self.CUR] + self.error[self.PRE]) + self.integral[self.PRE]
         self.derivative[self.CUR] = self.C2 * (self.error[self.CUR] - self.error[self.PRE]) + self.C3 * self.derivative[self.PRE]
-        print("esto es el error actual ",self.error[self.CUR])
-        print("esto es la integral ",self.integral[self.CUR])
-        print("esto es la derivada ",self.derivative[self.CUR])
+        # print("esto es el error actual ",self.error[self.CUR])
+        # print("esto es la integral ",self.integral[self.CUR])
+        # print("esto es la derivada ",self.derivative[self.CUR])
         self.error[self.PRE] = self.error[self.CUR]
         self.integral[self.PRE] = self.integral[self.CUR]
         self.derivative[self.PRE] = self.derivative[self.CUR]
