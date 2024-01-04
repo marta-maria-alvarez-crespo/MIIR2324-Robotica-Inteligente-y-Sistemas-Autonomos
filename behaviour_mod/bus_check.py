@@ -2,16 +2,16 @@
 from behaviour_mod.behaviour import Behaviour
 
 class BusCheck(Behaviour):
-    def __init__(self, robot, supress_list, params):
+    def __init__(self, robot, supress_list, params, stop_bus):
         super().__init__(robot, supress_list, params)
         self.passenger = False
         self.robot.setActiveBlobs(False,False,False,True)
         self.robot.whenANewColorBlobIsDetected(self.blob_detected)
-        self.allow_bus_stop = False
+        self.stop_bus = stop_bus
         
-    def take_control(self):
+    def take_control(self): 
         if not self.supress:
-            return self.passenger and self.allow_bus_stop
+            return self.passenger and self.stop_bus.stop_bus
     
     def blob_detected(self):
         self.passenger = True
@@ -21,22 +21,21 @@ class BusCheck(Behaviour):
         self.supress = False
         for bh in self.supress_list:
             bh.supress = True
-            
-        '''while True:
+        
+        self.stop_bus.finished_stop = False
+        self.robot.stopMotors()
+        
+        while True:
             if self.passenger:
-                self.robot.stopMotors()
                 self.passenger = False
                 self.robot.wait(1)
             else:
-                break'''
-                
-        self.robot.stopMotors()
-        self.robot.wait(5)
+                break
             
         self.robot.moveTiltTo(90,15,False)
         self.robot.movePanTo(0,15, True)
+        self.stop_bus.finished_stop = True
         self.passenger = False
-        self.allow_bus_stop = False
               
         for bh in self.supress_list:
             bh.supress = False

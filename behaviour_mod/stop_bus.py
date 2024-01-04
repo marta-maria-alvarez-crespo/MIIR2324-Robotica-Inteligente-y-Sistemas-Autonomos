@@ -6,6 +6,7 @@ class StopBus(Behaviour):
         super().__init__(robot, supress_list, params)
         self.bus_stop = False
         self.min_distance = 10
+        self.finished_stop = True
         self.name_qr = 'autobus'
     
     def take_control(self):
@@ -22,8 +23,9 @@ class StopBus(Behaviour):
         self.robot.moveTiltTo(105,100,False)
         self.robot.movePanTo(90,100, True)
         self.robot.wait(15)
-        self.robot.moveTiltTo(90,100,False)
-        self.robot.movePanTo(0,100, True)
+        if self.finished_stop:
+            self.robot.moveTiltTo(90,100,False)
+            self.robot.movePanTo(0,100, True)
         self.bus_stop = False   
            
         for bh in self.supress_list:
