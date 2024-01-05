@@ -16,10 +16,10 @@ class EmergencyTap(Behaviour):
         
     def action(self):
         print("----> control: EmergencyTap")
-        self.supress = False
-        
+        self.supress = False    
         for bh in self.supress_list:
-            bh.supress = True
-            
+            bh.supress = True     
         self.robot.stopMotors()
+        self.robot.movePanTo(90,100)
+        self.robot.moveTiltTo(75,100)
         self.set_stop()

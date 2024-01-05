@@ -18,7 +18,6 @@ class StopBus(Behaviour):
         self.supress = False
         for bh in self.supress_list:
             bh.supress = True
-            
         self.robot.moveWheels(5,5)
         self.robot.moveTiltTo(105,100,False)
         self.robot.movePanTo(90,100, True)
@@ -26,8 +25,7 @@ class StopBus(Behaviour):
         if self.finished_stop:
             self.robot.moveTiltTo(90,100,False)
             self.robot.movePanTo(0,100, True)
-        self.bus_stop = False   
-           
-        for bh in self.supress_list:
-            bh.supress = False
-     
+            for bh in self.supress_list:
+                bh.supress = False
+        self.bus_stop = False
+        

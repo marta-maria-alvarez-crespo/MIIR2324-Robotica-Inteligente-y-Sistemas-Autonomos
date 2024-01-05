@@ -16,17 +16,15 @@ class SayStop(Behaviour):
             return self.required_stop
         
     def action(self):
-            print("----> control: BusCheck")
+            print("----> control: SayStop")
             self.supress = False
             for bh in self.supress_list:
                 bh.supress = True
-            
             self.robot.moveWheelsByTime(5,5,15)
             self.robot.stopMotors()
             self.robot.wait(5)
             self.heard_stop = False
             self.required_stop = False
-            
             for bh in self.supress_list:
                 bh.supress = False
             

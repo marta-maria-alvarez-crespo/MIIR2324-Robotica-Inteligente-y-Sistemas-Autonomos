@@ -11,7 +11,7 @@ class BusCheck(Behaviour):
         
     def take_control(self): 
         if not self.supress:
-            return self.passenger and self.stop_bus.stop_bus
+            return self.passenger and self.stop_bus.bus_stop
     
     def blob_detected(self):
         self.passenger = True
@@ -21,22 +21,18 @@ class BusCheck(Behaviour):
         self.supress = False
         for bh in self.supress_list:
             bh.supress = True
-        
         self.stop_bus.finished_stop = False
-        self.robot.stopMotors()
-        
+        self.robot.stopMotors() 
         while True:
             if self.passenger:
                 self.passenger = False
                 self.robot.wait(1)
             else:
-                break
-            
+                break   
         self.robot.moveTiltTo(90,15,False)
         self.robot.movePanTo(0,15, True)
         self.stop_bus.finished_stop = True
-        self.passenger = False
-              
+        self.passenger = False       
         for bh in self.supress_list:
             bh.supress = False
      

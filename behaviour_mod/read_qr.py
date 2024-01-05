@@ -38,7 +38,7 @@ class readQR():
             elif self.behaviour[self.num_battery_low].low_battery:
                 self.behaviour[self.num_battery_low].battery_stop = True
             elif self.behaviour[self.num_say_stop].heard_stop:
-                self.behaviour[self.num_say_stop].required.stop = True
+                self.behaviour[self.num_say_stop].required_stop = True
             self.new_stop = False
             
         # Este permite la activación del comportamiento de avance y velocidad

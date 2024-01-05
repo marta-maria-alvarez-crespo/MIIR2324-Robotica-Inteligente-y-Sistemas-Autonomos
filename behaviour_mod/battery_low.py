@@ -16,23 +16,22 @@ class BatteryLow(Behaviour):
             if ((base_battery < self.min_battery or phone_battery < self.min_battery) 
                 and (base_battery != 0 and phone_battery != 0)):
                 self.low_battery = True
-            elif (base_battery > self.max_battery and phone_battery > self.max_battery):
-                self.low_battery = False
             self.robot.wait(0.01)
             return self.battery_stop
         
     def action(self):
-            print("----> control: BusCheck")
+            print("----> control: BatteryLow")
+            base_battery = self.robot.readBatteryLevel('base')
+            phone_battery = self.robot.readBatteryLevel('phone')
             self.supress = False
             for bh in self.supress_list:
                 bh.supress = True
-            
             self.robot.moveWheelsByTime(5,5,15)
             self.robot.stopMotors()
-            
             while self.low_battery:
+                if (base_battery > self.max_battery and phone_battery > self.max_battery):
+                    self.low_battery = False
                 self.robot.wait(0.01)
-            
             self.battery_stop = False
             for bh in self.supress_list:
                 bh.supress = False
