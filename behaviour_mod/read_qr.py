@@ -1,4 +1,3 @@
-
 class readQR():
     def __init__(self,robot,behaviour):
         self.robot = robot
@@ -46,9 +45,7 @@ class readQR():
             _, _, qr_speed = qr_id.rpartition(' ')
             speed = int(qr_speed)
             if qr_distance >= 15 and (speed >= 0 or speed <=100):
-                self.behaviour[self.num_go_ahead].error = [0, 0]
-                self.behaviour[self.num_go_ahead].integral = [0, 0]
-                self.behaviour[self.num_go_ahead].derivative = [0, 0]
+                self.behaviour[self.num_go_ahead].pid.reset_values()
                 self.behaviour[self.num_go_ahead].speed = speed
             else:
                 print("Velocidad fuera de rango")
