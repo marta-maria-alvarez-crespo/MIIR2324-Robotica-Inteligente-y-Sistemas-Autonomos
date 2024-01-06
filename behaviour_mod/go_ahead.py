@@ -1,13 +1,17 @@
 from behaviour_mod.behaviour import Behaviour
 from behaviour_mod.my_pid import PID
+from behaviour_mod.adaptative_speed import AdaptativeSpeed
 
 class GoAhead(Behaviour):
     def __init__(self, robot, supress_list, params):
         super().__init__(robot, supress_list, params)
+        self.adaptative_speed = AdaptativeSpeed(robot)
         self.speed = 20
+        self.qr_speed = 20
         self.robot.moveTiltTo(90,15)
         self.__SP = self.robot.readOrientationSensor().yaw
         self.pid = PID(robot)
+        
     def take_control(self):
         ''' take control se vuelve true cuando se suprime el comportamiento'''
         if not self.supress:
@@ -19,6 +23,11 @@ class GoAhead(Behaviour):
         # print(self.speed)
         self.supress = False
         if not self.supress:
+            self.speed = self.adaptative_speed.adapting_speed(self.speed)
+            if self.speed >= self.qr_speed:
+                self.speed = self.qr_speed
+            print("Soy la velocidad que llevo ",self.speed)
+            print("Soy la velocidad del qr ", self.qr_speed)
             self.robot.moveWheels(self.speed, int(self.pid.PID(self.__SP, self.speed)))
             self.robot.wait(0.1)
             
