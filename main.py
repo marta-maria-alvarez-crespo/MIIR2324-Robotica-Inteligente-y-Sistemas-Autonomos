@@ -10,16 +10,16 @@ from behaviour_mod.say_stop import SayStop
 from behaviour_mod.adaptative_speed import AdaptativeSpeed
 import time
 
-robobo = Robobo("localhost")
+robobo = Robobo("192.168.1.113")
 robobo.connect()
-robobo.moveWheelsByTime(-50,-50,2)
+#robobo.moveWheelsByTime(-50,-50,2)
 
 # Diccionario que se pasará a los comportamientos
 # para que lo activen cuando se finalice la misión
 params = {"stop": False}
 
 go_ahead = GoAhead(robobo, [], params)  #0
-adaptative_speed = AdaptativeSpeed(robobo, [go_ahead], params) # 1
+adaptative_speed = None # 1
 turn_qr = TurnQR(robobo, [go_ahead, adaptative_speed], params) #2
 stop_bus = StopBus(robobo, [go_ahead, turn_qr], params) #3
 check_bus = BusCheck(robobo, [go_ahead, turn_qr, stop_bus], params, stop_bus) # 4
@@ -32,8 +32,8 @@ threads = [go_ahead, adaptative_speed, turn_qr, stop_bus, check_bus, say_stop, b
 read_qr = readQR(robobo,threads)
 
 # Se inician todos los comportamientos
+
 go_ahead.start()
-adaptative_speed.start()
 turn_qr.start()
 stop_bus.start()
 check_bus.start()
@@ -44,6 +44,7 @@ emergency_tap.start()
 # Se mantiene el hilo principal en espera
 # hasta que algún comportamiento marca
 # el objetivo como terminado
+
 while not params["stop"]:
     if turn_qr.turn:
         go_ahead.SP = read_qr.orientation
@@ -53,4 +54,5 @@ while not params["stop"]:
 for thread in threads:
     thread.join()
 
+robobo.stopMotors()
 robobo.disconnect()

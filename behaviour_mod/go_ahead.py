@@ -28,7 +28,8 @@ class GoAhead(Behaviour):
                 self.speed = self.qr_speed
             print("Soy la velocidad que llevo ",self.speed)
             print("Soy la velocidad del qr ", self.qr_speed)
-            self.robot.moveWheels(self.speed, int(self.pid.PID(self.__SP, self.speed)))
+            #self.robot.moveWheels(self.speed, int(self.pid.PID(self.__SP, self.speed)))
+            self.robot.moveWheels(self.speed, self.speed)
             self.robot.wait(0.1)
             
     @property # Así me ahorro poner los paréntesis cuando llame a SP

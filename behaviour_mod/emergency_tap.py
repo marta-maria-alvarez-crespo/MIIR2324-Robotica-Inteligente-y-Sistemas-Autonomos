@@ -20,6 +20,6 @@ class EmergencyTap(Behaviour):
         for bh in self.supress_list:
             bh.supress = True     
         self.robot.stopMotors()
-        self.robot.movePanTo(90,100)
+        self.robot.movePanTo(0,100)
         self.robot.moveTiltTo(75,100)
         self.set_stop()

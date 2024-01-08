@@ -46,7 +46,7 @@ class readQR():
             speed = int(qr_speed)
             if qr_distance >= 15 and (speed >= 0 or speed <=100):
                 self.behaviour[self.num_go_ahead].pid.reset_values()
-                self.behaviour[self.num_go_ahead].speed = speed
+                self.behaviour[self.num_go_ahead].qr_speed = speed
             else:
                 print("Velocidad fuera de rango")
         except:
