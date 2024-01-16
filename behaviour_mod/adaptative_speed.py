@@ -11,14 +11,12 @@ class AdaptativeSpeed():
     def adapting_speed(self, speed):
         self.robot.wait(0.1)
         ir_distance_cur = self.robot.readIRSensor(IR.FrontC)
-        print('caca: ', ir_distance_cur)
         if ir_distance_cur > self.ir_distance_pre + 20:
             speed = speed - 5
         elif ir_distance_cur < self.ir_distance_pre - 20 or (ir_distance_cur <= 15):
-            speed = speed + 5
+            speed = speed + 1
         else:
             pass
-            
 
         self.ir_distance_pre = ir_distance_cur
         

@@ -26,10 +26,10 @@ class GoAhead(Behaviour):
             self.speed = self.adaptative_speed.adapting_speed(self.speed)
             if self.speed >= self.qr_speed:
                 self.speed = self.qr_speed
-            print("Soy la velocidad que llevo ",self.speed)
-            print("Soy la velocidad del qr ", self.qr_speed)
-            #self.robot.moveWheels(self.speed, int(self.pid.PID(self.__SP, self.speed)))
-            self.robot.moveWheels(self.speed, self.speed)
+            if self.params["ip"] == "localhost":
+                self.robot.moveWheels(self.speed,round(self.pid.PID(self.__SP, self.speed)))
+            else:
+                self.robot.moveWheels(round(self.pid.PID(self.__SP, self.speed)), self.speed)         
             self.robot.wait(0.1)
             
     @property # Así me ahorro poner los paréntesis cuando llame a SP
@@ -38,8 +38,12 @@ class GoAhead(Behaviour):
 
     @SP.setter # Fuerzo que __SP solo se pueda variar con esta condicion
     def SP(self, state):
-        if self.supress:    
-            self.__SP = state - 90
-            if self.__SP < -180:
-                self.__SP = self.__SP + 360
-            # print("esto es el __SP actual ",self.__SP)
+        if self.supress:
+            if self.params["ip"] == "localhost":
+                self.__SP = state - 90
+                if self.__SP < - 180:
+                    self.__SP = self.__SP + 360
+            else:
+                self.__SP = state + 90
+                if self.__SP > + 180:
+                    self.__SP = self.__SP - 360  

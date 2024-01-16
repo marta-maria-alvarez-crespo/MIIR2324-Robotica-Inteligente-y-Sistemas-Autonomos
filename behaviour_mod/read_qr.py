@@ -5,18 +5,18 @@ class readQR():
         self.bus_stop = False
         self.turn = False
         self.name_turn_qr = 'peligro izquierda'
+        self.name_turn_qr_r = 'peligro derecha'
         self.name_stop_bus_qr = 'autobus'
         self.new_stop = False
         self.last_qr = ''
         self.id = ''
         self.num_go_ahead = 0
-        # self.num_ajuste_de_velocidad = 1
-        self.num_turn_qr = 2
-        self.num_stop_bus = 3
-        self.num_check_bus = 4
-        self.num_say_stop = 5
-        self.num_battery_low = 6
-        self.num_emergency_tap = 7
+        self.num_turn_qr = 1
+        self.num_stop_bus = 2
+        self.num_check_bus = 3
+        self.num_say_stop = 4
+        self.num_battery_low = 5
+        self.num_emergency_tap = 6
         self.robot.whenAQRCodeIsDetected(self.qr_detected)
         self.robot.whenANewQRCodeIsDetected(self.new_qr_detected)
         self.robot.whenAQRCodeIsLost(self.qr_lost)
@@ -29,7 +29,7 @@ class readQR():
         if qr_distance >= 15 and qr_id == self.name_turn_qr and not self.behaviour[self.num_turn_qr].turn:
             self.orientation = self.robot.readOrientationSensor().yaw   
             self.behaviour[self.num_turn_qr].turn = True 
-        
+            
         # Este permite la activación de los comportamientos de parada
         if qr_distance >= 10 and qr_id == self.name_stop_bus_qr and not self.behaviour[self.num_stop_bus].bus_stop and self.new_stop:
             if not self.behaviour[self.num_battery_low].low_battery and not self.behaviour[self.num_say_stop].heard_stop:
