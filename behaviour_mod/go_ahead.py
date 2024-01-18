@@ -8,7 +8,6 @@ class GoAhead(Behaviour):
         self.adaptative_speed = AdaptativeSpeed(robot)
         self.speed = 20
         self.qr_speed = 20
-        self.robot.moveTiltTo(90,15)
         self.__SP = self.robot.readOrientationSensor().yaw
         self.pid = PID(robot)
         
@@ -20,7 +19,6 @@ class GoAhead(Behaviour):
     def action(self):
         ''' action() se llama desde behaviour a través de run()'''
         print("----> control: GoAhead")
-        # print(self.speed)
         self.supress = False
         if not self.supress:
             self.speed = self.adaptative_speed.adapting_speed(self.speed)

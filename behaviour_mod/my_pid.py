@@ -1,10 +1,10 @@
 class PID():
     def __init__(self, robot):
         self.robot = robot
-        self.K = 0.5
+        self.K = 0.63
         
         self.Ts = 0.1
-        self.Ti = 2
+        self.Ti = 30.8
         
         self.C1 = self.Ts / (2 * self.Ti)
         # self.C2 = (2 * self.Td) / (2 * self.Td / (self.N + self.Ts))
@@ -25,7 +25,6 @@ class PID():
         self.derivative = [0, 0]
 
     def PID(self, SP, speed):
-        ''' codigo con un pid discretizado. el error se pone en negativo porque se empieza en 20'''
         current_orientation = self.robot.readOrientationSensor().yaw
         
         if current_orientation/SP > 0:
@@ -35,9 +34,6 @@ class PID():
             
         self.integral[self.CUR] = self.C1 * (self.error[self.CUR] + self.error[self.PRE]) + self.integral[self.PRE]
         self.derivative[self.CUR] = self.C2 * (self.error[self.CUR] - self.error[self.PRE]) + self.C3 * self.derivative[self.PRE]
-        # print("esto es el error actual ",self.error[self.CUR])
-        # print("esto es la integral ",self.integral[self.CUR])
-        # print("esto es la derivada ",self.derivative[self.CUR])
         self.error[self.PRE] = self.error[self.CUR]
         self.integral[self.PRE] = self.integral[self.CUR]
         self.derivative[self.PRE] = self.derivative[self.CUR]
