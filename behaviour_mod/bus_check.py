@@ -1,3 +1,6 @@
+# Autora: Marta María Álvarez Crespo
+# Última modificación: 20/01/2023
+# Descripción: Comportamiento que permite la recogida de pasajeros
 
 from behaviour_mod.behaviour import Behaviour
 from robobopy.utils.Wheels import Wheels
@@ -23,6 +26,8 @@ class BusCheck(Behaviour):
             return self.passenger and self.stop_bus.bus_stop and self.stop_bus.searching
     
     def blob_detected(self):
+        """ Callback que se llama cuando se detecta un blob del color designado
+        """
         self.passenger = True
     
     def action(self):
@@ -33,8 +38,14 @@ class BusCheck(Behaviour):
         # Se suprimen los comportamientos de menor prioridad
         for bh in self.supress_list:
             bh.supress = True
+        # Se detienien los motores y se asegura que adaptative speed no influya en la
+        # parada 
         self.stop_bus.max_speed = 0
         self.robot.stopMotors()
+        # Se espera a que desaparezcan las personas (blobs) del campo de visión del robot
+        # Si esto sucede, se sobreescribe el valor de la distancia recorrida para romper
+        # el bucle de escaneo de la parada por parte del comportamiento inferior,
+        # permitiendo la entrada directa de go_ahead
         while True:
             if self.passenger:
                 self.passenger = False
@@ -43,10 +54,11 @@ class BusCheck(Behaviour):
                 self.stop_bus.distance = self.robot.readWheelPosition(Wheels.L)
                 self.stop_bus.searching = False
                 break
+        # Detenida la detección de personas (blobs), se resetean los atributos, se devuelve el pan y el tilt a su posición
+        # original y se desuprimen los comportamientos de menor prioridad
         self.robot.moveTiltTo(90,5,False)
         self.robot.movePanTo(20,5, True)
-        self.stop_bus.finished_stop = False
-        self.passenger = False    
+        self.stop_bus.finished_stop = False  
         self.stop_bus.max_speed = 5
         for bh in self.supress_list:
             bh.supress = False

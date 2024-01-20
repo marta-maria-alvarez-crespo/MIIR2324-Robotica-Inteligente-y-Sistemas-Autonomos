@@ -1,3 +1,6 @@
+# Autora: Marta María Álvarez Crespo
+# Última modificación: 20/01/2023
+# Descripción: Comportamiento que controla la carga del robot (base y móvil)
 
 from behaviour_mod.behaviour import Behaviour
 from robobopy.utils.Wheels import Wheels
@@ -11,13 +14,12 @@ class BatteryLow(Behaviour):
         """
         super().__init__(robot, supress_list, params)
         self.low_battery = False
-        self.min_battery = 0
-        self.max_battery = 80
+        self.min_battery = 23
+        self.max_battery = 25
         self.speed = 5
         self.max_speed = 5
         self.distance_bl = 2*360
         self.battery_stop = False
-        self.tap = False
         self.pid = PID(robot)
         self.adaptative_speed = AdaptativeSpeed(robot)
         self.robot.whenATapIsDetected(self.tap_detected)
@@ -62,7 +64,6 @@ class BatteryLow(Behaviour):
         # el PID para mantener el rumbo
         while ((self.robot.readWheelPosition(Wheels.L) < distance)):
             self.speed = self.adaptative_speed.adapting_speed(self.speed)
-            print(self.speed)
             if self.speed > self.max_speed:
                 self.speed = self.max_speed
             self.robot.moveWheels(self.pid.PID(self.orientation, self.speed), self.speed)

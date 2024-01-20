@@ -1,5 +1,5 @@
 # Autora: Marta María Álvarez Crespo
-# Última modificación: 18/01/2023
+# Última modificación: 20/01/2023
 # Descripción: Creación de los hilos para la ejecución de los diferentes comportamientos
 
 from robobopy.Robobo import Robobo
@@ -56,11 +56,6 @@ def main():
     # Espera a que terminen todos los hilos
     for thread in threads:
         thread.join()
-    # Con estas sentencias se asegura que adaptative_speed no interfiere en el proceso de parada de emergencia
-    go_ahead.qr_speed = 0
-    stop_bus.max_speed = 0
-    battery_low.max_speed = 0
-    say_stop.max_speed = 0
     # Se paran los motores y se desconecta el robot
     robobo.stopMotors()
     robobo.disconnect()

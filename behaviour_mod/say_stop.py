@@ -1,3 +1,7 @@
+# Autora: Marta María Álvarez Crespo
+# Última modificación: 20/01/2023
+# Descripción: Comportamiento que detecta la solicitud de parada y permite a los
+# pasajeros bajarse del autobús
 
 from behaviour_mod.behaviour import Behaviour
 from robobopy.utils.Wheels import Wheels
@@ -25,8 +29,7 @@ class SayStop(Behaviour):
         coincide con el definido en el __init__ (actualmente "para")
         """
         if not self.supress:
-            # if self.robot.readDetectedSpeech().message == self.message:
-            if self.message == "para":
+            if self.robot.readDetectedSpeech().message == self.message:
                 self.heard_stop = True
             return self.required_stop
         
@@ -57,15 +60,12 @@ class SayStop(Behaviour):
             self.robot.moveWheels(self.pid.PID(self.orientation, self.speed), self.speed)
             self.robot.wait(0.01)
         # Avanzada la distancia, se detiene al robot durante 5 segundos
-        # Max_speed se cambia a 0 para evitar la influencia del adaptative_speed
-        self.max_speed = 0 
         self.robot.stopMotors()
         self.robot.wait(5)
         # Se resetea el valor de las variables y se desuprimen los comportamientos de menor
         # prioridad
         self.heard_stop = False
         self.required_stop = False
-        self.max_speed = 5
         for bh in self.supress_list:
             bh.supress = False
             
